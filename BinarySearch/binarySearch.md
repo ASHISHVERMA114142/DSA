@@ -455,6 +455,31 @@ public int[] searchRange(int[] nums, int target) {
 
 **Examples:**
 - LeetCode 34: Find First and Last Position
+  ```java
+    private int findFirst(int []nums, int target){
+        int left = 0, right = nums.length - 1;
+        int ans = -1;
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if(nums[mid] == target) ans = mid;
+            if(target <= nums[mid]) right = mid - 1;
+            else left = mid + 1;
+
+        }
+        return ans;
+    }
+    private int findLast(int nums[], int target){
+        int left = 0, right = nums.length - 1;
+        int ans = -1;
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if(target == nums[mid]) ans = mid;
+            if(target >= nums[mid]) left = mid + 1;
+            else right = mid - 1;
+        }
+        return ans;
+    }
+  ```
 - LeetCode 278: First Bad Version
 
 ### Pattern 3: Search in Rotated/Modified Array
@@ -495,8 +520,65 @@ public int searchRotated(int[] nums, int target) {
 
 **Examples:**
 - LeetCode 33: Search in Rotated Sorted Array
+  ```java
+    public int search(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+  
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if(target == nums[mid]) return mid;
+            if(nums[left] <= nums[mid]){
+                if(nums[left] <= target && target < nums[mid]) right = mid - 1;
+                else left = mid + 1;
+            }else{
+                if(nums[mid] < target && target <= nums[right]) left = mid + 1;
+                else right = mid - 1;
+            }
+        }
+        return -1;
+    }
+  ```
 - LeetCode 81: Search in Rotated Sorted Array II
+  ```java
+      public boolean search(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if(nums[mid] == target) return true;
+            if(nums[mid] == nums[left] && nums[right] == nums[mid]){
+                left ++;
+                right --;
+                continue;
+            }
+            if(nums[left] <= nums[mid]){
+                if(nums[left] <= target && target < nums[mid]) right = mid - 1;
+                else left = mid + 1;
+            }else{
+                if(nums[mid] < target && target <= nums[right]) left = mid + 1;
+                else right = mid - 1;
+            }
+        }
+        return false;
+    }
+  ```
 - LeetCode 153: Find Minimum in Rotated Sorted Array
+  ```java
+      public int findMin(int[] nums) {
+        int left = 0, right = nums.length - 1;
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if(nums[mid] == target) return mid;
+            if(nums[left] <= nums[mid]){
+                if(nums[left] <= target && target < nums[mid]) right = mid - 1;
+                else left = mid + 1;
+            }else{
+                if(nums[mid] < target && target <= nums[right]) left = mid + 1;
+                else right = mid + 1;
+            }
+        }
+        return -1;
+    }
+  ```
 
 ### Pattern 4: Binary Search on Answer
 
@@ -546,6 +628,38 @@ private boolean canShip(int[] weights, int days, int capacity) {
 
 **Examples:**
 - LeetCode 410: Split Array Largest Sum
+  ```java
+      private boolean solve(int []nums, int k, int mid){
+        int sum = 0, count = 1;
+        for(int x : nums){
+            if(sum + x > mid){
+                sum = 0;
+                count ++;
+            }
+            sum += x;
+            if(count > k) return false;
+        }
+        return true;
+    }
+    public int splitArray(int[] nums, int k) {
+        int left = 0, right = 0;
+        for(int x : nums){
+            right += x;
+            left = Math.max(left, x);
+        }
+        int ans = 0;
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if(solve(nums, k, mid)){
+                ans = mid;
+                right = mid - 1;
+            }else{
+                left = mid + 1;
+            }
+        }
+        return ans;
+    }
+  ```
 - LeetCode 875: Koko Eating Bananas
 - LeetCode 1011: Capacity To Ship Packages Within D Days
 - LeetCode 1482: Minimum Number of Days to Make m Bouquets
