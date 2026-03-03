@@ -662,6 +662,38 @@ private boolean canShip(int[] weights, int days, int capacity) {
   ```
 - LeetCode 875: Koko Eating Bananas
 - LeetCode 1011: Capacity To Ship Packages Within D Days
+  ```java
+      private boolean solve(int[] weights, int days, int mid){
+        int sum = 0, count = 1;
+        for(int x : weights){
+            if(x > mid) return false;
+            if(sum + x > mid){
+                sum = 0;
+                count ++;
+            }
+            sum += x;
+            if(count > days) return false;
+        }
+        return true;
+    }
+    public int shipWithinDays(int[] weights, int days) {
+        int left = 1, right = 0;
+        for(int x : weights){
+            right += x;
+        }
+        int ans = -1;
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if(solve(weights, days, mid)){
+                ans = mid;
+                right = mid - 1;
+            }else{
+                left = mid + 1;
+            }
+        }
+        return ans;
+    }
+  ```
 - LeetCode 1482: Minimum Number of Days to Make m Bouquets
 
 ### Pattern 5: Peak Finding
